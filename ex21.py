@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-
 def add(a, b):
     print "adding: %d + %d" % (a, b)
     return a + b
@@ -31,4 +30,4 @@ print "add %d, sub %d, mult %d, div %d" % (ad, sub, mult, div)
 
 test = add(ad, subtract(sub, multiply(mult, devide(div, 2))))
 
-print test
+print
