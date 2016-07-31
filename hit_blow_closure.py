@@ -7,57 +7,60 @@ class Game(object):
     def __init__(self):
         self.answer_list = None
         self.player_victory = False
+        self.hit = None
+        self.blow = None
 
     def generate_answer_list(self):
-        array = np.arange(10)
+        array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         np.random.shuffle(array)
         self.answer_list = array[0:4]
         print(self.answer_list)
 
     def answer_validator(self, input_list):
-        hit = 0
-        blow = 0
-
         def input_list_lengh_validator(input_list):
-            if len(input_list) not in np.arange(len(self.answer_list)):
-                raise InvalidGuessError()
+            if len(input_list) > 4:
+                raise InvalidGuessError(input_list)
 
         def num_validator(input_list):
             for num in input_list:
-                if num not in np.arange(10):
-                    raise InvalidGuessError()
+                if num not in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
+                    raise InvalidGuessError(input_list)
 
         def blow_validator(input_list):
-            blow = [1 for num in input_list if num in self.answer_list]
-            return np.sum(blow)
+            a_list = []
+            for num in input_list:
+                if num in self.answer_list:
+                    a_list.append(1)
+            self.blow = np.sum(a_list)
 
         def hit_validator(input_list):
-            hit = [1 for num in input_list
-                   if num in self.answer_list and
-                   input_list.index(num) is self.answer_list.index(num)]
-            return np.sum(hit)
+            a_list = []
+            for num in input_list:
+                if num in self.answer_list and input_list.index(num) is (self.answer_list).index(num):
+                    a_list.append(1)
+            self.hit = np.sum(a_list)
 
         def victory_validator(input_list):
             if input_list is self.answer_list:
                 return True
 
-        def result_printer():
-            print("Hit: {0}, Blow: {1}".format(hit, blow))
-
         return(input_list_lengh_validator, num_validator,
-               blow_validator, hit_validator, victory_validator, result_printer)
+               blow_validator, hit_validator, victory_validator)
 
     def validation_engine(self, input_list):
         validations = Game.answer_validator(self, input_list)
         for validation in validations:
-            print(validation(input_list))
+            validation(input_list)
+        print("Hit: {0}, Blow: {1}".format(self.hit, self.blow))
+        self.hit = 0
+        self.blow = 0
 
 
 class InvalidGuessError(Exception):
     """docstring for InvalidGuess"""
 
-    def __init__(self, array):
-        self.arg = array
+    def __init__(self, a_list):
+        self.arg = a_list
 
 game = Game()
 game.generate_answer_list()
@@ -65,7 +68,7 @@ game.generate_answer_list()
 while game.player_victory is False:
     try:
         input_txt = input("> Guess Number:  ")
-        input_list = list(input_txt)
+        input_list = [int(num) for num in '1234']
         game.validation_engine(input_list)
     except InvalidGuessError:
         print("Try again, your guess was invalid.")
