@@ -18,7 +18,9 @@ class Game(object):
 
     def answer_validator(self, input_list):
         def input_list_lengh_validator(input_list):
-            if len(input_list) > 4:
+            if len(input_list) > 4 or len(input_list) < 3 :
+                raise InvalidGuessError(input_list)
+            elif len(np.unique(input_list)) < 4:
                 raise InvalidGuessError(input_list)
 
         def num_validator(input_list):
@@ -27,22 +29,23 @@ class Game(object):
                     raise InvalidGuessError(input_list)
 
         def blow_validator(input_list):
-            a_list = []
+            counter = 0
             for num in input_list:
                 if num in self.answer_list:
-                    a_list.append(1)
-            self.blow = np.sum(a_list)
+                    counter += 1
+            self.blow = counter
 
         def hit_validator(input_list):
-            a_list = []
+            counter = 0
             for num in input_list:
-                if num in self.answer_list and input_list.index(num) is (self.answer_list).index(num):
-                    a_list.append(1)
-            self.hit = np.sum(a_list)
+                if num in self.answer_list and (input_list.index(num) is (self.answer_list).index(num)):
+                    counter += 1
+            self.hit = counter
 
         def victory_validator(input_list):
-            if input_list is self.answer_list:
-                return True
+            if self.hit is 4:
+                self.player_victory = True
+                print('YOU WIN!!')
 
         return(input_list_lengh_validator, num_validator,
                blow_validator, hit_validator, victory_validator)
@@ -68,7 +71,7 @@ game.generate_answer_list()
 while game.player_victory is False:
     try:
         input_txt = input("> Guess Number:  ")
-        input_list = [int(num) for num in '1234']
+        input_list = [int(num) for num in input_txt]
         game.validation_engine(input_list)
     except InvalidGuessError:
         print("Try again, your guess was invalid.")
