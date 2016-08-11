@@ -36,7 +36,9 @@ class Game(object):
                 else:
                     return False
 
-        return [lengh_validator, uniqunes_validator, num_validator]
+        yield lengh_validator
+        yield uniqunes_validator
+        yield num_validator
 
     def answer_validator(self, input_list):
         answer_list = self.answer_list
@@ -52,8 +54,11 @@ class Game(object):
         def hit_validator(input_list):
             counter = 0
             for num in input_list:
-                if (input_list.index(num) is (answer_list).index(num)):
-                    counter += 1
+                try:
+                    if input_list.index(num) is answer_list.index(num):
+                        counter += 1
+                except ValueError:
+                    counter += 0
             self.hit = counter
 
         def victory_validator(input_list):
