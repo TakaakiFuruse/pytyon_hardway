@@ -16,29 +16,43 @@ class Game(object):
         self.answer_list = array[0:4]
         print(self.answer_list)
 
-    def answer_validator(self, input_list):
-        def input_list_lengh_validator(input_list):
-            if len(input_list) > 4 or len(input_list) < 3:
-                raise InvalidGuessError(input_list)
-            elif len(np.unique(input_list)) < 4:
-                raise InvalidGuessError(input_list)
+    def array_validator(input_list):
+        def lengh_validator(input_list):
+            if len(input_list) is 4:
+                return True
+            else:
+                return False
+
+        def uniqunes_validator(input_list):
+            if len(input_list) is len(set(input_list)):
+                return True
+            else:
+                return False
 
         def num_validator(input_list):
             for num in input_list:
-                if num not in [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]:
-                    raise InvalidGuessError(input_list)
+                if num in list(range(10)):
+                    return True
+                else:
+                    return False
+
+        return [lengh_validator, uniqunes_validator, num_validator]
+
+    def answer_validator(self, input_list):
+        answer_list = self.answer_list
 
         def blow_validator(input_list):
             counter = 0
             for num in input_list:
-                if num in self.answer_list:
-                    counter += 1
+                if num in answer_list:
+                    if (input_list.index(num) is not (answer_list).index(num)):
+                        counter += 1
             self.blow = counter
 
         def hit_validator(input_list):
             counter = 0
             for num in input_list:
-                if num in self.answer_list and (input_list.index(num) is (self.answer_list).index(num)):
+                if (input_list.index(num) is (answer_list).index(num)):
                     counter += 1
             self.hit = counter
 
@@ -47,12 +61,14 @@ class Game(object):
                 self.player_victory = True
                 print('YOU WIN!!')
 
-        return(input_list_lengh_validator, num_validator,
-               blow_validator, hit_validator, victory_validator)
+        return(blow_validator, hit_validator, victory_validator)
 
     def validation_engine(self, input_list):
-        validations = Game.answer_validator(self, input_list)
-        for validation in validations:
+        for validation in Game.array_validator(input_list):
+            if validation(input_list) is False:
+                raise InvalidGuessError(input_list)
+
+        for validation in Game.answer_validator(self, input_list):
             validation(input_list)
         print("Hit: {0}, Blow: {1}".format(self.hit, self.blow))
         self.hit = 0
