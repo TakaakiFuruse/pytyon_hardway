@@ -14,7 +14,6 @@ class Game(object):
         array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
         np.random.shuffle(array)
         self.answer_list = array[0:4]
-        print(self.answer_list)
 
     def array_validator(input_txt):
         assert len(input_txt) is 4, 'Too many numbers.'
@@ -52,6 +51,8 @@ class Game(object):
         return(blow_validator, hit_validator, victory_validator)
 
     def game_logic(self, input_txt):
+        self.hit = 0
+        self.blow = 0
         Game.array_validator(input_txt)
 
         input_list = [int(letter) for letter in input_txt]
@@ -59,15 +60,3 @@ class Game(object):
         for validation in Game.answer_validator(self, input_list):
             validation(input_list)
         print("Hit: {0}, Blow: {1}".format(self.hit, self.blow))
-        self.hit = 0
-        self.blow = 0
-
-game = Game()
-game.generate_answer_list()
-
-while game.player_victory is False:
-    try:
-        input_txt = input("> Guess Number:  ")
-        game.game_logic(input_txt)
-    except AssertionError:
-        print("Try again, your guess was invalid.")
