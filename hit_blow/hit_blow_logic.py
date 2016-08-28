@@ -1,5 +1,4 @@
-import numpy as np
-
+from random import shuffle
 
 class Game(object):
     """docstring for Game"""
@@ -11,9 +10,9 @@ class Game(object):
         self.blow = None
 
     def generate_answer_list(self):
-        array = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
-        np.random.shuffle(array)
-        self.answer_list = array[0:4]
+        a_list = [i for i in range(10)]
+        shuffle(a_list)
+        self.answer_list = a_list[0:4]
 
     def array_validator(input_txt):
         assert len(input_txt) is 4, 'Too many numbers.'
